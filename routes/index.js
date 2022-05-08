@@ -9,7 +9,9 @@ router.get("/api/employees", (req, res) => {
     if (!err) {
       res.send(data);
     } else {
-      console.log(err);
+      res.json({
+        error: err,
+      });
     }
   });
 });
@@ -76,13 +78,11 @@ router.put("/api/employee/edit/:id", (req, res) => {
 router.delete("/api/employee/:id", (req, res) => {
   Employee.findByIdAndDelete(req.params.id, (err, data) => {
     if (!err) {
-      res
-        .status(200)
-        .json({
-          code: 200,
-          message: "Employee deleted successfully!",
-          deleteEmployee: data,
-        });
+      res.status(200).json({
+        code: 200,
+        message: "Employee deleted successfully!",
+        deleteEmployee: data,
+      });
     } else {
       res.json({ error: err });
     }
