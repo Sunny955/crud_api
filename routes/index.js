@@ -39,20 +39,21 @@ router.post("/api/employee/add", (req, res) => {
 
 // Get single employee
 router.get("/api/employee/:id", (req, res) => {
-  if (req.params.id.length < 24) {
+  if (req.params.id && req.params.id.length < 24) {
     res.json({
       error: "Invalid ID",
     });
+  } else {
+    Employee.findById(req.params.id, (err, data) => {
+      if (!err && data) {
+        res.send(data);
+      } else {
+        res.json({
+          error: "No data found!",
+        });
+      }
+    });
   }
-  Employee.findById(req.params.id, (err, data) => {
-    if (!err && data) {
-      res.send(data);
-    } else {
-      res.json({
-        error: "No data found!",
-      });
-    }
-  });
 });
 
 // Update employee
@@ -82,17 +83,23 @@ router.put("/api/employee/edit/:id", (req, res) => {
 
 //Delete employee
 router.delete("/api/employee/:id", (req, res) => {
-  Employee.findByIdAndDelete(req.params.id, (err, data) => {
-    if (!err) {
-      res.status(200).json({
-        code: 200,
-        message: "Employee deleted successfully!",
-        deleteEmployee: data,
-      });
-    } else {
-      res.json({ error: err });
-    }
-  });
+  if (!req.params.id) {
+    res.json({
+      error: "No id provided",
+    });
+  } else {
+    Employee.findByIdAndDelete(req.params.id, (err, data) => {
+      if (!err) {
+        res.status(200).json({
+          code: 200,
+          message: "Employee deleted successfully!",
+          deleteEmployee: data,
+        });
+      } else {
+        res.json({ error: err });
+      }
+    });
+  }
 });
 
 module.exports = router;
