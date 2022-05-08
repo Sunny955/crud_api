@@ -39,12 +39,18 @@ router.post("/api/employee/add", (req, res) => {
 
 // Get single employee
 router.get("/api/employee/:id", (req, res) => {
+  if (req.params.id.length < 24) {
+    res.json({
+      error: "Invalid ID",
+    });
+  }
   Employee.findById(req.params.id, (err, data) => {
     if (!err) {
       res.send(data);
     } else {
-      res.send("Error!! wrong id!");
-      console.log(err);
+      res.json({
+        error: err,
+      });
     }
   });
 });
