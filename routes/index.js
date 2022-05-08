@@ -45,11 +45,11 @@ router.get("/api/employee/:id", (req, res) => {
     });
   }
   Employee.findById(req.params.id, (err, data) => {
-    if (!err) {
+    if (!err && data) {
       res.send(data);
     } else {
       res.json({
-        error: err,
+        error: "No data found!",
       });
     }
   });
